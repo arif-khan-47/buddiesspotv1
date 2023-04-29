@@ -1,29 +1,33 @@
 import Layout from '@/components/Layout/Layout'
 import React from 'react'
 import { getSession } from 'next-auth/react'
+import Loading from '@/components/Loading'
 
-function about() {
+function About() {
   return (
     <Layout>
-      about
+      <Loading/>
     </Layout>
   )
 }
 
-export default about
+export default About
 
 
-export async function getServerSideProps(context:any) {
-    const session = await getSession(context);
-    if (!session || session.user.role !== "admin") {
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-    }
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+// console.log('bhabhabhabhabhabhabhabhabhabh',session)
+
+  if (!session || session.user.role !== "admin") {
     return {
-      props: {}, // continue to render the page
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
     };
   }
+
+  return {
+    props: {},
+  };
+}

@@ -15,7 +15,7 @@ function Footer() {
     },
     {
       title: 'About',
-      link: '/'
+      link: '/about'
     },
     {
       title: 'Faqs',
@@ -23,7 +23,7 @@ function Footer() {
     },
     {
       title: 'Contact',
-      link: '/'
+      link: '/contact'
     },
   ]
   return (

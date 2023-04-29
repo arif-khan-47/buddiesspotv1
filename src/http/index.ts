@@ -28,6 +28,11 @@ export interface ILoginData {
 }
 export const login = (data: ILoginData) => api.post("/login", data);
 
+
+export const register = (data: any) => api.post("/register", data);
+
+
+
 //get all catagories
 export const getAllCategories = () => api.get("/products/catagories");
 

@@ -1,11 +1,15 @@
-import React from 'react'
+import Layout from '@/components/Layout/Layout'
+import { useRouter } from 'next/router'
 
-function productPage() {
+
+function ProductPage() {
+  const router = useRouter()
+  const  slug  = router.query.page
   return (
-    <div>
-      
-    </div>
+    <Layout>
+      <p>Product: {slug}</p>
+    </Layout>
   )
 }
 
-export default productPage
+export default ProductPage

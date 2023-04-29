@@ -4,7 +4,7 @@ import React from 'react'
 interface ILogoProps {
     className: any
 }
-const Logo = () => {
+const LogoWithoutName = () => {
 
     const LogoUrl = 'https://res.cloudinary.com/dgyudczza/image/upload/v1682663310/Buddies%20Spot/BS_pgqi1o.png'
     return (
@@ -19,4 +19,4 @@ const Logo = () => {
     )
 }
 
-export default Logo
+export default LogoWithoutName

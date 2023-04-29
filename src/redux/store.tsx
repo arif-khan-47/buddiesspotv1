@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 // import authSlice from "./Slices/authSlice";
 // import sectionSlice from "./Slices/sectionSlice";
 // import subscriptionSlice from "./Slices/subscriptionSlice";
@@ -6,7 +7,6 @@ import { configureStore } from "@reduxjs/toolkit";
 // import detailsSlice from "./Slices/detailsSlice";
 // import seriesSlice from "./Slices/seriesSlice";
 // import contentSlice from "./Slices/contentSlice";
-
 
 const store = configureStore({
   reducer: {
