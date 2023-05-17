@@ -1,4 +1,4 @@
-import Layout from '@/components/Layout/Layout'
+import Layout from '@/components/Users/Layout/Layout'
 import Logo from '@/components/Tools/Img/Logo'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'

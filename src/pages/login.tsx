@@ -1,4 +1,4 @@
-import Layout from '@/components/Layout/Layout'
+import Layout from '@/components/Users/Layout/Layout'
 import Logo from '@/components/Tools/Img/Logo'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
@@ -62,7 +62,7 @@ function Login() {
 
                   <div className='h-[2px] bg-red-600 rounded-full my-5'/>
                   <div className='flex justify-center gap-2 font-semibold'>
-                    Don't have an account? <Link href={'/register'}><div className='text-red-600'>Sign Up</div></Link> 
+                    Don&apos;t have an account? <Link href={'/register'}><div className='text-red-600'>Sign Up</div></Link> 
                   </div>
                 </div>
               </div>

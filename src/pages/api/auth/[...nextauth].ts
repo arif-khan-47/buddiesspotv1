@@ -2,6 +2,7 @@ import { login, register } from "@/http";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
   // Configure one or more authentication providers
@@ -28,10 +29,11 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         const { name, email, password } = credentials as any;
-
+        
         try {
           let user;
           // Determine if the request is for registration or login based on the presence of a name
+          // const dispatch = useDispatch();
           if (name) {
             const res = await register({
               name,
@@ -46,21 +48,13 @@ export const authOptions: NextAuthOptions = {
             });
             user = res.data;
           }
-          
-        // const { email, password } = credentials as any;
 
-
-        // try {
-        //   const res = await login({
-        //     email,
-        //     password,
-        //   });
-        //   const user = res.data; // assuming the user object is returned under the "user" key
           if (user) {
-            // add role information to the returned user object
-            // console.log('gvbhjn', user)
+            // dispatch(setAuth({ isAuthenticated: true, user }));
+            // console.log(user)
             const role = user.user.role;
             user.role = role;
+            // dispatchAuthAction(true, user);
             return user;
           } else {
             return null;
@@ -69,25 +63,23 @@ export const authOptions: NextAuthOptions = {
           console.log(error);
           return null;
         }
-
       },
     }),
     // ...add more providers here
   ],
-  callbacks:{
-    async jwt({token, user}:any) {
+  callbacks: {
+    async jwt({ token, user }: any) {
       return {
         ...token,
-        ...user
-      }
+        ...user,
+      };
     },
 
-    async session({session, token, user}:any){
+    async session({ session, token, user }: any) {
       session.user = token;
       session.accessToken = token.token;
-
       return session;
-    }
+    },
   },
 
   session: {

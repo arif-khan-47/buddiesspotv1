@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-import Logo from '../Tools/Img/Logo'
+import Logo from '../../Tools/Img/Logo'
 import { HiLocationMarker } from 'react-icons/hi'
 import { MdOutlineAlternateEmail, MdCall } from 'react-icons/md'
 import { ImWhatsapp } from 'react-icons/im'

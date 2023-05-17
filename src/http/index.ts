@@ -1,8 +1,5 @@
 import axios from "axios";
-// import { ClientJS } from 'clientjs'
-// import { publicIpv4 } from 'public-ip';
-// import { IAllContentResponse } from "../types/http/allContentResponse";
-// import { IwatchtimeCount } from "../types/http/watchtime";
+
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -32,9 +29,30 @@ export const login = (data: ILoginData) => api.post("/login", data);
 export const register = (data: any) => api.post("/register", data);
 
 
-
 //get all catagories
 export const getAllCategories = () => api.get("/products/catagories");
+
+//get all product
+export const getAllProduct = () => api.get("/products");
+
+//search products
+export const searchProducts = (data:any) => api.get(`/products?keyword=${data}`)
+//get Single Product
+export const getSingleProduct = (slug: string|undefined) => api.get(`/product/${slug}`);
+
+
+
+//admin routes
+//create Product
+export const addProduct = (data: any) => api.post("/admin/product/new", data);
+//delte Product
+export const DeleteProduct = (id: string|number) => api.delete(`/admin/product/${id}`);
+//
+
+
+
+
+
 
 // auth endpoints
 // export const verifyOTP = (data: IVerifyOtpPayload) => api.post("/auth/verify-otp", data);

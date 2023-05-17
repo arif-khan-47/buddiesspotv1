@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import Logo from '../Tools/Img/Logo'
+import Logo from '../../Tools/Img/Logo'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { getAllCategories } from '@/http'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { IoClose, IoMenu } from 'react-icons/io5'
-import {RiUser3Fill} from 'react-icons/ri'
+import { RiUser3Fill } from 'react-icons/ri'
 
 
 
@@ -55,7 +55,7 @@ const Header = () => {
           </div>
 
           <div className={`${open ? 'block' : 'hidden'} my-auto lg:block col-span-2 lg:col-span-5`}>
-            <ul className='text-center lg:text-left lg:flex lg:justify-end gap-10 mr-16'>
+            <ul className='text-center lg:text-left lg:flex lg:justify-end gap-10 lg:mr-16'>
               <Link href={'/'}><li className={`${isActive('/') ? 'font-semibold' : ''} hover:text-red-600 my-3 lg:my-0`}>Home</li></Link>
               {
                 nav?.map((item: any, index: number) => (
@@ -70,12 +70,12 @@ const Header = () => {
               {
                 session?.user ?
                   <><li>
-                    <Link href={'/'}><li className={`text-red-600 relative`} onClick={()=>setProfileOpen(!profileOpen)}>
-                    <RiUser3Fill className='h-6 w-6'/>
-                      </li></Link>
-                    <div className={`absolute ${profileOpen?'block':'hidden'} z-10 mt-2 py-2 bg-yellow-300 rounded-lg px-2`}>
-                    <Link href={'/profile'}><li className={`text-red-600 cursor-pointer rounded-md hover:text-white hover:bg-black px-1`}>{session && session.user && session.user.user && session.user.user.name}</li></Link>
-                    <li onClick={() => signOut()} className={`text-red-600 cursor-pointer rounded-md hover:text-white hover:bg-black px-1 mt-2`}>Logout</li>
+                    <li className={`text-red-600 relative cursor-pointer`} onClick={() => setProfileOpen(!profileOpen)}>
+                      <RiUser3Fill className='h-6 w-6' />
+                    </li>
+                    <div className={`absolute ${profileOpen ? 'block' : 'hidden'} z-10 mt-2 py-2 bg-yellow-300 rounded-lg px-2`}>
+                      <Link href={'/profile'}><li className={`text-red-600 cursor-pointer rounded-md hover:text-white hover:bg-black px-1`}>{session && session.user && session.user.user && session.user.user.name}</li></Link>
+                      <li onClick={() => signOut()} className={`text-red-600 cursor-pointer rounded-md hover:text-white hover:bg-black px-1 mt-2`}>Logout</li>
                     </div>
                   </li>
                   </>
