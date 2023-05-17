@@ -34,6 +34,9 @@ export const getAllCategories = () => api.get("/products/catagories");
 
 //get all product
 export const getAllProduct = () => api.get("/products");
+//get all product by categories 
+export const getProductsByCategory = (data:string) => api.get(`products/category/${data}`);
+
 
 //search products
 export const searchProducts = (data:any) => api.get(`/products?keyword=${data}`)
@@ -45,6 +48,8 @@ export const getSingleProduct = (slug: string|undefined) => api.get(`/product/${
 //admin routes
 //create Product
 export const addProduct = (data: any) => api.post("/admin/product/new", data);
+//update Product
+export const updateProduct = (id:string, data:any) => api.put(`/admin/product/${id}`, data);
 //delte Product
 export const DeleteProduct = (id: string|number) => api.delete(`/admin/product/${id}`);
 //

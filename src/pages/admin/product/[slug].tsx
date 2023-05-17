@@ -1,30 +1,34 @@
 import { useRouter } from 'next/router';
-import { addProduct, getSingleProduct } from '@/http';
+import { addProduct, getSingleProduct, updateProduct } from '@/http';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react'
 import { ChangeEvent } from 'react';
 import toast from 'react-hot-toast';
 import { IoArrowBackOutline } from 'react-icons/io5'
 import AdminLayout from '@/components/Admin/Layout/AdminLayout';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
+import { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next';
+
 
 
 export default function ProductDetails() {
+  const { data: session }: any = useSession()
+  setCookies('token', session?.user?.token, { maxAge: 60 * 6 * 24 });
+
+  const categories = ['shawarma', 'farnkie', 'fries'];
+
   const router = useRouter();
   const urlslug = router?.query?.slug;
 
   const [data, setData] = useState<any>([])
-
+  const [productID, setproductID] = useState<string>('')
 
 
   const [name, setName] = useState('')
   const handleNameInput = (event: any) => {
     setName(event.target.value);
   };
-  const [category, setCategory] = useState('')
-  const handleCategoryInput = (event: any) => {
-    setCategory(event.target.value);
-  };
+  
   const [description, setDescription] = useState('')
   const handleDescriptionInput = (event: any) => {
     setDescription(event.target.value);
@@ -50,8 +54,21 @@ export default function ProductDetails() {
 
   const [images, setImages] = useState([])
   const [imagesPrew, setImagesPrew] = useState([])
+  
+  
+  const [category, setCategory] = useState('')
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
+    
+  const toggleOptions = () => {
+    setIsOpen(!isOpen);
+  };
 
-  console.log(images, setImages)
+  const selectOption = (categories: string) => {
+    setSelectedOption(categories);
+    setCategory(categories);
+    setIsOpen(false);
+  };
 
   const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
     const files: File[] = Array.from(e.target.files as FileList);
@@ -74,21 +91,23 @@ export default function ProductDetails() {
 
   }
 
-  async function handleNewProduct() {
-    setLoading(true);
+  async function handleUpdateProduct() {
+    setLoadingButton(true);
     try {
-      const res = await addProduct({ name, category, description, images, price, slug });
+      const data = { name, category, description, stock, images, price, slug }
+      console.log('prod id', productID)
+      const res = await updateProduct(productID, data);
       if (res.data.success == true) {
-        toast.success("Item Added.")
+        toast.success("Item Updated.")
         setTimeout(() => window.location.reload(), 3000);
-        setLoading(false);
+        setLoadingButton(false);
       }
 
 
     } catch (error: any) {
-      console.log(error?.response?.data?.error)
+      console.log(error)
       toast.error(error?.response?.data?.error || "Something went wrong.")
-      setLoading(false)
+      setLoadingButton(false)
     }
   }
 
@@ -98,6 +117,15 @@ export default function ProductDetails() {
 
       const res = await getSingleProduct(urlslug as string);
       setData(res?.data?.product)
+      setproductID(res?.data?.product?._id);
+      setName(res?.data?.product?.name);
+      setCategory(res?.data?.product?.category);
+      setSlug(res?.data?.product?.slug);
+      setPrice(res?.data?.product?.price);
+      setDescription(res?.data?.product?.description);
+      setStock(res?.data?.product?.stock);
+      // setImages(res?.data?.product?.images)
+
       setLoading(false);
     } catch (error: any) {
       console.log(error?.response?.data?.error)
@@ -109,7 +137,7 @@ export default function ProductDetails() {
   useEffect(() => {
     if (urlslug) {
       getProductData();
-      // setLoading(false)
+      setLoading(false)
     }
   }, [])
 
@@ -129,32 +157,46 @@ export default function ProductDetails() {
           <div className='grid grid-cols-2 gap-5'>
             <div className=''>
               <div className='font-bold pl-5'>Name</div>
-              <input type="text" className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='Enter the Name' defaultValue={data?.name} onChange={handleNameInput} />
+              <input type="text" className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='Enter the Name' defaultValue={name} onChange={handleNameInput} />
             </div>
-
-            <div>
+            <div className="relative">
               <div className='font-bold pl-5'>Catagory</div>
-              <input className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='catagory' onChange={handleCategoryInput} defaultValue={data?.category} />
+
+              <div
+                className="w-[80%] border rounded-full py-2 px-4 cursor-pointer"
+                onClick={toggleOptions}>
+                <span className='capitalize'>
+                  {category ? category : selectedOption || 'Select an option'}
+                </span>
+              </div>
+              {isOpen && (
+                <div className="absolute w-[80%] bg-yellow-300 border border-gray-300 rounded-xl mt-1">
+                  {categories.map((option) => (
+                    <div
+                      key={option}
+                      className="px-4 py-2 hover:bg-red-500 rounded-xl cursor-pointer"
+                      onClick={() => selectOption(option)}
+                    >
+                      <span className='capitalize'>{option}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>
               <div className='pl-5 font-bold'>Description</div>
-              <input className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='description' onChange={handleDescriptionInput} defaultValue={data?.description} />
-            </div>
-
-            <div>
-              <div className='pl-5 font-bold'>Slug</div>
-              <input onChange={handleSlugInput} defaultValue={data?.slug} className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='slug' />
+              <input className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='description' onChange={handleDescriptionInput} defaultValue={description} />
             </div>
 
             <div>
               <div className='pl-5 font-bold'>Price</div>
-              <input type="number" onChange={handlePriceInput} defaultValue={data?.price} className='w-[40%] border focus:outline-none rounded-full px-5 py-1' placeholder='price' />
+              <input type="number" onChange={handlePriceInput} defaultValue={price} className='w-[40%] border focus:outline-none rounded-full px-5 py-1' placeholder='price' />
             </div>
 
-            <div>
+            <div className='col-span-2'>
               <div className='pl-5 font-bold'>Stock</div>
-              <input type="number" onChange={handleStockInput} defaultValue={data?.stock} className='w-[40%] border focus:outline-none rounded-full px-5 py-1' placeholder='stock' />
+              <input type="number" onChange={handleStockInput} defaultValue={stock} className='w-[40%] border focus:outline-none rounded-full px-5 py-1' placeholder='stock' />
             </div>
 
             <div className='pl-5'>
@@ -175,7 +217,7 @@ export default function ProductDetails() {
                     </div>
                   ))
                     :
-                    data && data.images && data?.images.map((image: any) => (
+                    data.images && data.images.map((image: any) => (
                       <div className='w-10 h-10 relative'>
                         <Image
                           src={image?.url}
@@ -191,7 +233,7 @@ export default function ProductDetails() {
             </div>
 
           </div>
-          <div onClick={handleNewProduct} className={`text-center w-32 mt-4 hover:bg-black duration-500 ${loadingButton ? 'bg-black' : 'bg-red-600'}  py-2 rounded-full text-white cursor-pointer' onClick={() => handleNewProduct()`}>
+          <div onClick={handleUpdateProduct} className={`text-center w-32 mt-4 hover:bg-black duration-500 ${loadingButton ? 'bg-black' : 'bg-red-600'}  py-2 rounded-full text-white cursor-pointer`}>
             {
               loadingButton ?
                 <div className="w-6 h-6 rounded-full animate-spin border-4 mx-auto border-solid border-white border-t-transparent"></div>
@@ -212,7 +254,7 @@ export default function ProductDetails() {
 export async function getServerSideProps(context: any) {
   const session = await getSession(context);
   const { slug } = context.query;
-    return {
+  return {
     props: {}
   }
 }

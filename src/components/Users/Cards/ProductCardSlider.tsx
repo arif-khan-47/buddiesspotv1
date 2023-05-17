@@ -15,8 +15,6 @@ function ProductCardSlider({ product }: any) {
             <Swiper
                 spaceBetween={10}
                 slidesPerView={6}
-                onSlideChange={() => console.log('slide change')}
-                onSwiper={(swiper) => console.log(swiper)}
             >
                 {
                     product && product.length > 0 && product.map((item: Product, index: number) => (
@@ -31,7 +29,7 @@ function ProductCardSlider({ product }: any) {
                                         alt='logo'
                                     />
                                 </div>
-                                <div className='text-center text-xs text-red-500 font-bold'>
+                                <div className='text-center text-xs text-red-500 font-bold capitalize'>
                                     {item.name}
                                 </div>
                                 <div className='absolute bottom-2 text-sm font-bold left-1/2 transform -translate-x-1/2 text-gray-600'>

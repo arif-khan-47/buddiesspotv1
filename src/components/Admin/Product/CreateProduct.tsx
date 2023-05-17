@@ -7,16 +7,28 @@ import toast from 'react-hot-toast'
 
 
 function CreateProduct() {
-
+    
+    const categories = ['shawarma', 'farnkie', 'fries'];
 
     const [name, setName] = useState('')
     const handleNameInput = (event: any) => {
         setName(event.target.value);
+        setSlug(generateSlug(event.target.value));
     };
     const [category, setCategory] = useState('')
-    const handleCategoryInput = (event: any) => {
-        setCategory(event.target.value);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('');
+      
+    const toggleOptions = () => {
+      setIsOpen(!isOpen);
     };
+  
+    const selectOption = (categories: string) => {
+      setSelectedOption(categories);
+      setCategory(categories);
+      setIsOpen(false);
+    };
+  
     const [description, setDescription] = useState('')
     const handleDescriptionInput = (event: any) => {
         setDescription(event.target.value);
@@ -25,13 +37,22 @@ function CreateProduct() {
     const handlePriceInput = (event: any) => {
         setPrice(event.target.value);
     };
-    const [slug, setSlug] = useState('')
-    const handleSlugInput = (event: any) => {
-        setSlug(event.target.value);
-    };
+
     const [stock, setStock] = useState('')
     const handleStockInput = (event: any) => {
         setStock(event.target.value);
+    };
+    const [slug, setSlug] = useState('');
+
+
+    const generateSlug = (name: string) => {
+        const slug = name
+            .toLowerCase()
+            .replace(/\s+/g, '-') // Replace whitespace with hyphens
+            .replace(/[^a-z0-9-]/g, '') // Remove non-alphanumeric characters
+            .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+            .replace(/^-|-$/g, ''); // Remove leading and trailing hyphens
+        return slug;
     };
 
 
@@ -93,10 +114,31 @@ function CreateProduct() {
                     <input type="text" className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='Enter the Name' defaultValue={name} onChange={handleNameInput} />
                 </div>
 
-                <div>
-                    <div className='font-bold pl-5'>Catagory</div>
-                    <input className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='catagory' onChange={handleCategoryInput} defaultValue={category} />
+                <div className="relative">
+              <div className='font-bold pl-5'>Catagory</div>
+
+              <div
+                className="w-[80%] border rounded-full py-2 px-4 cursor-pointer"
+                onClick={toggleOptions}>
+                <span className='capitalize'>
+                  {category ? category : selectedOption || 'Select an option'}
+                </span>
+              </div>
+              {isOpen && (
+                <div className="absolute w-[80%] bg-yellow-300 border border-gray-300 rounded-xl mt-1">
+                  {categories.map((option) => (
+                    <div
+                      key={option}
+                      className="px-4 py-2 hover:bg-red-500 rounded-xl cursor-pointer"
+                      onClick={() => selectOption(option)}
+                    >
+                      <span className='capitalize'>{option}</span>
+                    </div>
+                  ))}
                 </div>
+              )}
+            </div>
+                
 
                 <div>
                     <div className='pl-5 font-bold'>Description</div>
@@ -105,7 +147,7 @@ function CreateProduct() {
 
                 <div>
                     <div className='pl-5 font-bold'>Slug</div>
-                    <input onChange={handleSlugInput} defaultValue={slug} className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='slug' />
+                    <input value={slug} className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='slug' />
                 </div>
 
                 <div>

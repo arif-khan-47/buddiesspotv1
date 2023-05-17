@@ -108,9 +108,10 @@ function Product() {
                                     <thead className='w-full text-white'>
                                         <tr className='bg-red-500 w-[100%] text-left'>
                                             <th className='w-[8%] py-2 px-1'>Sr No.</th>
-                                            <th className='w-[52%] py-2 px-1'>Name</th>
-                                            <th className='py-2 w-[30%] px-1'>Price</th>
-                                            <th className='py-2 px-1 w-[10%]'></th>
+                                            <th className='w-[50%] py-2 px-1'>Name</th>
+                                            <th className='w-[20%] py-2 px-1'>Category</th>
+                                            <th className='w-[10%] py-2 px-1'>Price</th>
+                                            <th className='w-[12%] py-2 px-1'></th>
 
                                         </tr>
                                     </thead>
@@ -119,15 +120,16 @@ function Product() {
                                             product && product.length > 0 && product.map((product: Product, index: number) => (
                                                 <tr className='border-y'>
                                                     <td className='py-2 text-center'>{index + 1}</td>
-                                                    <td className='py-2 px-1 font-semibold'>{product.name}</td>
+                                                    <td className='py-2 px-1 font-semibold capitalize'>{product.name}</td>
+                                                    <td className='py-2 px-1 capitalize'>{product.category}</td>
                                                     <td className='py-2 px-1'>₹{product.price}</td>
                                                     <td className='py-2 px-1 flex justify-center gap-2'>
-                                                        <div><MdDelete onClick={() => handleDeleteProduct(product)} className='my-auto h-8 w-8 cursor-pointer hover:bg-red-500 hover:text-white rounded-full p-1' /></div>
                                                         <div>
                                                             <Link href={`/admin/product/${product.slug}`}>
                                                                     <MdModeEdit className='my-auto h-8 w-8 cursor-pointer hover:bg-red-500 hover:text-white rounded-full p-1' />
                                                             </Link>
                                                         </div>
+                                                        <div><MdDelete onClick={() => handleDeleteProduct(product)} className='my-auto h-8 w-8 cursor-pointer hover:bg-red-500 hover:text-white rounded-full p-1' /></div>
                                                     </td>
                                                 </tr>
                                             ))
@@ -150,10 +152,19 @@ function Product() {
                                                         :
                                                         data && data.length > 0 && data.map((product: Product, index: number) => (
                                                             <tr className='border-y'>
-                                                                <td className='py-2 text-center'>{index + 1}</td>
-                                                                <td className='py-2 px-1 font-semibold'>{product.name}</td>
-                                                                <td className='py-2 px-1'>₹{product.price}</td>
-                                                            </tr>
+                                                    <td className='py-2 text-center'>{index + 1}</td>
+                                                    <td className='py-2 px-1 font-semibold capitalize'>{product.name}</td>
+                                                    <td className='py-2 px-1 capitalize'>{product.category}</td>
+                                                    <td className='py-2 px-1'>₹{product.price}</td>
+                                                    <td className='py-2 px-1 flex justify-center gap-2'>
+                                                        <div>
+                                                            <Link href={`/admin/product/${product.slug}`}>
+                                                                    <MdModeEdit className='my-auto h-8 w-8 cursor-pointer hover:bg-red-500 hover:text-white rounded-full p-1' />
+                                                            </Link>
+                                                        </div>
+                                                        <div><MdDelete onClick={() => handleDeleteProduct(product)} className='my-auto h-8 w-8 cursor-pointer hover:bg-red-500 hover:text-white rounded-full p-1' /></div>
+                                                    </td>
+                                                </tr>
                                                         ))
                                                 }
                                             </>
