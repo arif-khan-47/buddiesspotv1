@@ -12,6 +12,7 @@ import { RiUser3Fill } from 'react-icons/ri'
 const Header = () => {
   const { data: session } = useSession() as any
   const [profileOpen, setProfileOpen] = useState<boolean>(false)
+  const router = useRouter()
   const [open, setOpen] = useState<boolean>(false)
   const [nav, setNav] = useState([])
   const { pathname } = useRouter()
@@ -30,6 +31,8 @@ const Header = () => {
     }
     getCategories()
   }, [])
+
+  
 
   return (
     <div className='bg-white'>
@@ -57,16 +60,14 @@ const Header = () => {
           <div className={`${open ? 'block' : 'hidden'} my-auto lg:block col-span-2 lg:col-span-5`}>
             <ul className='text-center lg:text-left lg:flex lg:justify-end gap-10 lg:mr-16'>
               <Link href={'/'}><li className={`${isActive('/') ? 'font-semibold' : ''} hover:text-red-600 my-3 lg:my-0`}>Home</li></Link>
+              
               {
                 nav?.map((item: any, index: number) => (
-                  <Link key={index} href={`/${item}`}>
-                    <li className={`${isActive(`/${item}`) ? '' : ''} hover:text-red-600 my-3 lg:my-0 capitalize`}>{item}</li>
-                  </Link>
+                    <li onClick={()=>router.push(`/${item}`).then(() => router.reload())} className={`${isActive(`/${item}`) ? '' : ''} hover:text-red-600 my-3 lg:my-0 capitalize cursor-pointer`}>{item}</li>
+
                 ))
               }
-              {/* {useData && useData.user && useData.user.user && useData.user.user.name 
-                  ? `Welcome, ${useData.user.user.name}`
-                  : 'Welcome, guest'} */}
+              
               {
                 session?.user ?
                   <><li>

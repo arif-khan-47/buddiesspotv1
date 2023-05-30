@@ -6,6 +6,7 @@ import Loading from "@/components/Loading"
 import { getAllProduct, searchProducts } from "@/http"
 import ProductCardSlider from "@/components/Users/Cards/ProductCardSlider"
 import { useDebounce } from "use-debounce"
+import { getSession } from 'next-auth/react'
 import { Product } from "@/types/productInterface"
 
 
@@ -111,3 +112,11 @@ export default function Home() {
   )
 }
 
+// export async function getServerSideProps(context:any) {
+//   const session = await getSession(context);
+//   return {
+//     props: {
+//       a: serializedData,
+//     },
+//   };
+// }

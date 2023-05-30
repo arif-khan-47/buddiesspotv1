@@ -13,7 +13,7 @@ import { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next';
 
 export default function ProductDetails() {
   const { data: session }: any = useSession()
-  setCookies('token', session?.user?.token, { maxAge: 60 * 6 * 24 });
+  setCookies('token', session?.user?.token, { maxAge:  60 * 60 * 24 * 30 });
 
   const categories = ['shawarma', 'farnkie', 'fries'];
 
@@ -28,7 +28,7 @@ export default function ProductDetails() {
   const handleNameInput = (event: any) => {
     setName(event.target.value);
   };
-  
+
   const [description, setDescription] = useState('')
   const handleDescriptionInput = (event: any) => {
     setDescription(event.target.value);
@@ -41,6 +41,22 @@ export default function ProductDetails() {
   const handleSlugInput = (event: any) => {
     setSlug(event.target.value);
   };
+
+  const foodType = ['veg', 'non-veg'];
+    const [type, setType] = useState('')
+    const [selectTypeOpen, setselectTypeOpen] = useState(false);
+    const [selectedTypeOption, setselectedTypeOption] = useState('');
+
+    const toggleTypeOptions = () => {
+        setselectTypeOpen(!selectTypeOpen);
+    };
+
+    const selectTypeOption = (type: string) => {
+        setselectedTypeOption(type);
+        setType(type);
+        setselectTypeOpen(false);
+    };
+
   const [stock, setStock] = useState('')
   const handleStockInput = (event: any) => {
     setStock(event.target.value);
@@ -54,12 +70,12 @@ export default function ProductDetails() {
 
   const [images, setImages] = useState([])
   const [imagesPrew, setImagesPrew] = useState([])
-  
-  
+
+
   const [category, setCategory] = useState('')
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
-    
+
   const toggleOptions = () => {
     setIsOpen(!isOpen);
   };
@@ -94,8 +110,14 @@ export default function ProductDetails() {
   async function handleUpdateProduct() {
     setLoadingButton(true);
     try {
-      const data = { name, category, description, stock, images, price, slug }
-      console.log('prod id', productID)
+      let data = { name, category, description, stock, price, slug, type }
+      if (Array.isArray(images) && images.length > 0) {
+        if (typeof images[0] === 'string') {
+          // If the first item in the `images` array is a string, assume it holds multiple image URLs
+          data = { ...data, images } as any;
+        }
+        // If the first item in the `images` array is an object, assume it holds additional image data and exclude it from the `data` object
+      }
       const res = await updateProduct(productID, data);
       if (res.data.success == true) {
         toast.success("Item Updated.")
@@ -124,7 +146,9 @@ export default function ProductDetails() {
       setPrice(res?.data?.product?.price);
       setDescription(res?.data?.product?.description);
       setStock(res?.data?.product?.stock);
-      // setImages(res?.data?.product?.images)
+      setImages(res?.data?.product?.images);
+      setType(res?.data?.product?.type);
+
 
       setLoading(false);
     } catch (error: any) {
@@ -184,6 +208,35 @@ export default function ProductDetails() {
               )}
             </div>
 
+
+
+            <div className="relative">
+                    <div className='font-bold pl-5'>Type</div>
+
+                    <div
+                        className="w-[80%] border rounded-full py-2 px-4 cursor-pointer"
+                        onClick={toggleTypeOptions}>
+                        <span className='capitalize'>
+                            {type ? type : selectedTypeOption || 'Select an option'}
+                        </span>
+                    </div>
+                    {selectTypeOpen && (
+                        <div className="absolute w-[80%] bg-yellow-300 border border-gray-300 rounded-xl mt-1">
+                            {foodType.map((option) => (
+                                <div
+                                    key={option}
+                                    className="px-4 py-2 hover:bg-red-500 rounded-xl cursor-pointer"
+                                    onClick={() => selectTypeOption(option)}
+                                >
+                                    <span className='capitalize'>{option}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+
+
             <div>
               <div className='pl-5 font-bold'>Description</div>
               <input className='w-[80%] border focus:outline-none rounded-full px-5 py-1' placeholder='description' onChange={handleDescriptionInput} defaultValue={description} />
@@ -194,18 +247,18 @@ export default function ProductDetails() {
               <input type="number" onChange={handlePriceInput} defaultValue={price} className='w-[40%] border focus:outline-none rounded-full px-5 py-1' placeholder='price' />
             </div>
 
-            <div className='col-span-2'>
+            <div className=''>
               <div className='pl-5 font-bold'>Stock</div>
               <input type="number" onChange={handleStockInput} defaultValue={stock} className='w-[40%] border focus:outline-none rounded-full px-5 py-1' placeholder='stock' />
             </div>
 
-            <div className='pl-5'>
+            <div className='pl-5 col-span-2'>
               <div className='text font-bold'>Images</div>
               <input type='file' onChange={onSelectFile} multiple accept='image/png, image/jpeg, image/webp' />
               <div className='flex flex-wrap gap-5 my-5'>
 
                 {
-                  imagesPrew.length > 0 ? imagesPrew?.map((image) => (
+                  imagesPrew.length ? imagesPrew?.map((image) => (
                     <div className='w-10 h-10 relative'>
                       <Image
                         src={image}

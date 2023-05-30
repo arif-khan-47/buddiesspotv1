@@ -10,9 +10,10 @@ import ProductCard from '@/components/Users/Cards/ProductCard'
 
 
 function ProductPage() {
+
   const [loading, setLoading] = useState<boolean>(true)
   const [data, setData] = useState<any>([])
-  // console.log(data)
+  console.log(data)
 
   const router = useRouter()
   const slug = router.query.page
@@ -34,12 +35,12 @@ function ProductPage() {
       {loading ?
         <Loading /> :
         <div className='container m-auto'>
-          <div className='mt-10 mb-5 capitalize font-semibold text-xl text-red-500'>{slug}</div>
-          <div className='grid grid-cols-5 gap-10'>
+          <div className='mt-5 mb-5 capitalize font-semibold text-xl text-red-500'>{slug}</div>
+          <div className='grid grid-cols-5 gap-8'>
             {
               data && data.map((item: Product, index: number) => (
                 <div className='col-span-1'>
-                  <ProductCard item={item}/>
+                  <ProductCard item={item} />
                 </div>
 
               ))
@@ -50,15 +51,35 @@ function ProductPage() {
   )
 }
 
-export default ProductPage
-
-// This gets called on every request
 
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  const { slug } = context.query;
-  return {
-    props: {}
+  const { page } = context.query;
+  try {
+    const res = await getProductsByCategory(page as string)
+    const data = res?.data?.products;
+    if (data.length > 0) {
+      return {
+        props: {
+          session,
+          a:data,
+        }
+      }
+    }else{
+      return{
+        notFound:true
+      }
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      props: {
+        session,
+      }
+    }
   }
+
 }
+
+export default ProductPage

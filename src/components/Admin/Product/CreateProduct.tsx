@@ -7,28 +7,28 @@ import toast from 'react-hot-toast'
 
 
 function CreateProduct() {
-    
-    const categories = ['shawarma', 'farnkie', 'fries'];
 
     const [name, setName] = useState('')
     const handleNameInput = (event: any) => {
         setName(event.target.value);
         setSlug(generateSlug(event.target.value));
     };
+
+    const categories = ['shawarma', 'farnkie', 'fries'];
     const [category, setCategory] = useState('')
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('');
-      
-    const toggleOptions = () => {
-      setIsOpen(!isOpen);
+    const [selectCatOpen, setselectCatOpen] = useState(false);
+    const [selectedCatOption, setselectedCatOption] = useState('');
+
+    const toggleCatOptions = () => {
+        setselectCatOpen(!selectCatOpen);
     };
-  
-    const selectOption = (categories: string) => {
-      setSelectedOption(categories);
-      setCategory(categories);
-      setIsOpen(false);
+
+    const selectCatOption = (categories: string) => {
+        setselectedCatOption(categories);
+        setCategory(categories);
+        setselectCatOpen(false);
     };
-  
+
     const [description, setDescription] = useState('')
     const handleDescriptionInput = (event: any) => {
         setDescription(event.target.value);
@@ -42,6 +42,24 @@ function CreateProduct() {
     const handleStockInput = (event: any) => {
         setStock(event.target.value);
     };
+
+    const foodType = ['veg', 'non-veg'];
+    const [type, setType] = useState('')
+    const [selectTypeOpen, setselectTypeOpen] = useState(false);
+    const [selectedTypeOption, setselectedTypeOption] = useState('');
+
+    const toggleTypeOptions = () => {
+        setselectTypeOpen(!selectTypeOpen);
+    };
+
+    const selectTypeOption = (type: string) => {
+        setselectedTypeOption(type);
+        setType(type);
+        setselectTypeOpen(false);
+    };
+
+
+
     const [slug, setSlug] = useState('');
 
 
@@ -62,7 +80,6 @@ function CreateProduct() {
     const [images, setImages] = useState([])
     const [imagesPrew, setImagesPrew] = useState([])
 
-    console.log(images, setImages)
 
     const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
         const files: File[] = Array.from(e.target.files as FileList);
@@ -88,7 +105,7 @@ function CreateProduct() {
     async function handleNewProduct() {
         setLoading(true);
         try {
-            const res = await addProduct({ name, category, description, images, price, slug });
+            const res = await addProduct({ name, category, description, images, price, slug, type });
             if (res.data.success == true) {
                 toast.success("Item Added.")
                 setTimeout(() => window.location.reload(), 3000);
@@ -115,30 +132,58 @@ function CreateProduct() {
                 </div>
 
                 <div className="relative">
-              <div className='font-bold pl-5'>Catagory</div>
+                    <div className='font-bold pl-5'>Catagory</div>
 
-              <div
-                className="w-[80%] border rounded-full py-2 px-4 cursor-pointer"
-                onClick={toggleOptions}>
-                <span className='capitalize'>
-                  {category ? category : selectedOption || 'Select an option'}
-                </span>
-              </div>
-              {isOpen && (
-                <div className="absolute w-[80%] bg-yellow-300 border border-gray-300 rounded-xl mt-1">
-                  {categories.map((option) => (
                     <div
-                      key={option}
-                      className="px-4 py-2 hover:bg-red-500 rounded-xl cursor-pointer"
-                      onClick={() => selectOption(option)}
-                    >
-                      <span className='capitalize'>{option}</span>
+                        className="w-[80%] border rounded-full py-2 px-4 cursor-pointer"
+                        onClick={toggleCatOptions}>
+                        <span className='capitalize'>
+                            {category ? category : selectedCatOption || 'Select an option'}
+                        </span>
                     </div>
-                  ))}
+                    {selectCatOpen && (
+                        <div className="absolute w-[80%] bg-yellow-300 border border-gray-300 rounded-xl mt-1">
+                            {categories.map((option) => (
+                                <div
+                                    key={option}
+                                    className="px-4 py-2 hover:bg-red-500 rounded-xl cursor-pointer"
+                                    onClick={() => selectCatOption(option)}
+                                >
+                                    <span className='capitalize'>{option}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-              )}
-            </div>
-                
+
+
+
+
+                <div className="relative">
+                    <div className='font-bold pl-5'>Type</div>
+
+                    <div
+                        className="w-[80%] border rounded-full py-2 px-4 cursor-pointer"
+                        onClick={toggleTypeOptions}>
+                        <span className='capitalize'>
+                            {type ? type : selectedTypeOption || 'Select an option'}
+                        </span>
+                    </div>
+                    {selectTypeOpen && (
+                        <div className="absolute w-[80%] bg-yellow-300 border border-gray-300 rounded-xl mt-1">
+                            {foodType.map((option) => (
+                                <div
+                                    key={option}
+                                    className="px-4 py-2 hover:bg-red-500 rounded-xl cursor-pointer"
+                                    onClick={() => selectTypeOption(option)}
+                                >
+                                    <span className='capitalize'>{option}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
 
                 <div>
                     <div className='pl-5 font-bold'>Description</div>
@@ -160,13 +205,13 @@ function CreateProduct() {
                     <input type="number" onChange={handleStockInput} defaultValue={stock} className='w-[40%] border focus:outline-none rounded-full px-5 py-1' placeholder='stock' />
                 </div>
 
-                <div className='pl-5'>
+                <div className='pl-5 col-span-2'>
                     <div className='text font-bold'>Images</div>
                     <input type='file' onChange={onSelectFile} multiple accept='image/png, image/jpeg, image/webp' />
                     <div className='flex flex-wrap gap-5 my-5'>
                         {
-                            imagesPrew.map((image) => (
-                                <div className='w-10 h-10 relative'>
+                            imagesPrew.map((image, index) => (
+                                <div key={index} className='w-10 h-10 relative'>
                                     <Image
                                         src={image}
                                         objectFit='contain'
@@ -187,7 +232,7 @@ function CreateProduct() {
                         <div className="w-6 h-6 rounded-full animate-spin border-4 mx-auto border-solid border-white border-t-transparent"></div>
                     </div>
                     :
-                    <div onClick={handleNewProduct} className={`text-center w-32 mt-4 hover:bg-black duration-500 ${loading ? 'bg-black' : 'bg-red-600'}  py-2 rounded-full text-white cursor-pointer' onClick={() => handleNewProduct()`}>
+                    <div onClick={handleNewProduct} className={ `cursor-pointer text-center w-32 mt-4 hover:bg-black duration-500 ${loading ? 'bg-black' : 'bg-red-600'}  py-2 rounded-full text-white cursor-pointer' onClick={() => handleNewProduct()`}>
                         <button className=''>
                             Create
                         </button>

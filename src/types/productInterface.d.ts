@@ -9,6 +9,7 @@ export interface Product {
       _id: string;
     }
   ];
+  type:'veg'|'non-veg';
   name: string;
   numberOfReview: number;
   price: number;

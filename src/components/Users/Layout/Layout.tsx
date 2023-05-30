@@ -11,6 +11,7 @@ interface ILayoutProps {
   title?: string;
   description?: string;
   keywords?: string;
+  header?:any
 }
 
 const Layout: NextPage<ILayoutProps> = ({
@@ -20,6 +21,7 @@ const Layout: NextPage<ILayoutProps> = ({
   title = 'Buddies Spot',
   description = 'Best Fast Food in Mumbai.',
   keywords,
+  // header
 
 }) => {
 

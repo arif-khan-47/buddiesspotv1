@@ -70,7 +70,6 @@ function Product() {
         if (confirmed) {
             try {
                 const res = await DeleteProduct(item?._id)
-                console.log(res?.data)
                 toast.success('Product deleted successfully')
                 setTimeout(() => window.location.reload(), 3000);
             } catch (error) {

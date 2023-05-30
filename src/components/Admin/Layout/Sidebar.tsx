@@ -35,9 +35,9 @@ const Sidebar = () => {
       <div className='container m-auto'>
         <div className='mx-5 lg:mx-0'>
           <div className='h-16 w-32 lg:my-5 mx-auto lg:h-20 lg:w-40 relative'>
-            <a href="/">
+            <Link href="/">
             <Logo />
-            </a>
+            </Link>
           </div>
           <div className={`my-auto lg:block col-span-2 lg:col-span-5`}>
             <ul className='py-5'>

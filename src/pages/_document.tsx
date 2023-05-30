@@ -1,18 +1,29 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import Document, { Html, Head, Main, NextScript } from 'next/document'
+import { getAllCategories } from '@/http'
 
-export default function Document() {
-  return (
-    <Html lang="en">
-      <Head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  )
+
+class MyDocument extends Document {
+    static async getInitialProps(ctx:any) {
+        const initialProps:any = await Document.getInitialProps(ctx)
+        const header = await getAllCategories();
+        initialProps.header = header.data.categories
+        return { ...initialProps }
+    }
+
+    render() {
+        return (
+            <Html>
+                <Head>
+                </Head>
+                <body>
+                    <Main />
+                    <NextScript />
+                </body>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js" defer />
+            </Html>
+        )
+    }
 }
+
+export default MyDocument
+
